@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Hydros">
 <meta name="application-name" content="Hydros">
-<link rel="manifest" href="manifest.webmanifest">
+<link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -201,6 +201,11 @@ textarea{min-height:88px;resize:vertical}
 .jrn .d{font-size:.72rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;align-items:center}
 .jrn .t{font-size:.9rem;margin-top:3px;white-space:pre-wrap}
 .jrn button{border:0;background:none;color:#B23A2C;font-size:.75rem;padding:0}
+.diag{list-style:none;padding:0;margin:0;font-size:.83rem}
+.diag li{padding:5px 0;border-bottom:1px solid var(--line);line-height:1.4}
+.diag li:last-child{border-bottom:0}
+.diag .ok{color:#2E7D4F}
+.diag .ko{color:#B23A2C}
 .toast{position:fixed;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);bottom:18px;
   background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;font-size:.87rem;
   box-shadow:var(--shadow);z-index:60;opacity:0;pointer-events:none;-webkit-transition:opacity .2s;transition:opacity .2s}
@@ -585,6 +590,32 @@ function estInstallee() {
            window.navigator.standalone === true;
   } catch (e) { return false; }
 }
+function majDiag() {
+  var ul = document.getElementById('diag');
+  if (!ul) return;
+  var l = [];
+  function ligne(ok, txt) { return '<li class="' + (ok ? 'ok' : 'ko') + '">' + (ok ? '✓' : '✕') + ' ' + txt + '</li>'; }
+
+  var https = location.protocol === 'https:';
+  l.push(ligne(https, https ? 'Servi en HTTPS' : 'Pas en HTTPS (' + location.protocol + ') — l\'installation est impossible depuis un fichier local'));
+  var sw = 'serviceWorker' in navigator;
+  var swActif = sw && !!navigator.serviceWorker.controller;
+  l.push(ligne(swActif, swActif ? 'Service worker actif (mode hors ligne disponible)'
+    : (sw ? 'Service worker pas encore actif — recharge la page une fois' : 'Service worker non supporté par ce navigateur')));
+  l.push(ligne(!!promptInstall, promptInstall ? 'Installation automatique proposée par le navigateur'
+    : 'Pas de proposition automatique — passe par le menu du navigateur'));
+  ul.innerHTML = l.join('') + '<li>Vérification du manifeste…</li>';
+
+  fetch('manifest.json', { cache: 'no-store' }).then(function (r) {
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+  }).then(function (m) {
+    ul.innerHTML = l.join('') + ligne(true, 'Manifeste lu : « ' + m.short_name +' », ' + m.icons.length + ' icônes');
+  })['catch'](function (e) {
+    ul.innerHTML = l.join('') + ligne(false, 'Manifeste introuvable ou illisible (' + e.message + ') — vérifie que manifest.json et les icônes sont bien à côté de index.html');
+  });
+}
+
 function carteInstall() {
   if (estInstallee()) return '';
   var ios = /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -602,7 +633,8 @@ function carteInstall() {
     '</ul>' +
     '<div class="btnrow"><button type="button" class="btn" data-install="1">Installer</button>' +
     '<button type="button" class="btn ghost" data-open="1">Ouvrir dans le navigateur par défaut</button></div>' +
-    '<p class="hint" id="installhint"></p></div>';
+    '<p class="hint" id="installhint"></p>' +
+    '<h2 style="margin-top:16px;font-size:.95rem">Diagnostic</h2><ul id="diag" class="diag"><li>Vérification…</li></ul></div>';
 }
 
 function vueSport(key) {
@@ -721,6 +753,7 @@ function brancher() {
   each('[data-prep]', function (b) {
     b.onclick = function (e) { e.stopPropagation(); ouvrirModal(b.getAttribute('data-prep')); };
   });
+  if (document.getElementById('diag')) majDiag();
   each('[data-install]', function (b) {
     b.onclick = function () {
       if (promptInstall) {
@@ -755,6 +788,12 @@ each('.seasontoggle button', function (b) {
     toast(state.season === 'belle' ? "Belle saison : natation au lac d'Annecy" : 'Période hivernale : natation en bassin');
   };
 });
+
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').then(function () { majDiag(); }, function () { majDiag(); });
+  });
+}
 
 var promptInstall = null;
 window.addEventListener('beforeinstallprompt', function (e) {
