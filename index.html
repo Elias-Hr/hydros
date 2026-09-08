@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#10242E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hydros">
+<meta name="application-name" content="Hydros">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<title>Hydros Annecy — Semaine type 2026/2027</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#10242E;
+  --paper:#EEF3F3;
+  --surface:#FFFFFF;
+  --line:#D5E0E0;
+  --muted:#5B7480;
+  --nat:#1B7FA6;
+  --cap:#C13B22;
+  --ppg:#6A4E9C;
+  --velo:#2E7D4F;
+  --accent:#1B7FA6;
+  --radius:14px;
+  --shadow:0 1px 0 rgba(16,36,46,.06), 0 6px 18px -12px rgba(16,36,46,.45);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:#EEF3F3;
+  background:var(--paper);
+  color:#10242E;
+  color:var(--ink);
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:64px;
+}
+h1,h2,h3{font-family:"Bricolage Grotesque","Inter",Helvetica,Arial,sans-serif;font-weight:700;letter-spacing:-.02em;margin:0}
+a{color:inherit}
+button{font:inherit;cursor:pointer;-webkit-appearance:none;appearance:none}
+:focus-visible{outline:2.5px solid var(--ink);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+
+/* ---------- Barre haute ---------- */
+.topbar{background:#10242E;background:var(--ink);color:#EAF2F2;padding:14px 0 12px}
+.topbar .wrap{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-align:baseline;align-items:baseline;
+  -ms-flex-pack:justify;justify-content:space-between;gap:12px;-ms-flex-wrap:wrap;flex-wrap:wrap}
+.club{font-family:"Bricolage Grotesque","Inter",Helvetica,Arial,sans-serif;font-weight:800;font-size:1.05rem;letter-spacing:-.01em}
+.season{font-size:.78rem;color:#9FBAC2}
+.seasontoggle{display:flex;gap:2px;background:rgba(255,255,255,.1);padding:3px;border-radius:999px}
+.seasontoggle button{background:none;border:0;color:#BBD2D8;padding:5px 11px;border-radius:999px;font-size:.78rem;font-weight:500}
+.seasontoggle button[aria-pressed="true"]{background:#EAF2F2;color:#10242E;font-weight:600}
+
+/* ---------- Navigation sports ---------- */
+nav.sports{position:-webkit-sticky;position:sticky;top:0;z-index:20;background:#EEF3F3;background:rgba(238,243,243,.94);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;max-width:1080px;margin:0 auto;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tab{white-space:nowrap;border:1px solid var(--line);background:var(--surface);color:var(--muted);
+  padding:8px 14px;border-radius:999px;font-size:.87rem;font-weight:500;display:flex;align-items:center;gap:7px}
+.tab .dot{width:9px;height:9px;border-radius:50%;background:currentColor;opacity:.9;flex:none}
+.tab[data-route="natation"]{color:#1B7FA6} .tab[data-route="cap"]{color:#C13B22}
+.tab[data-route="ppg"]{color:#6A4E9C} .tab[data-route="velo"]{color:#2E7D4F}
+.tab[aria-current="page"]{background:#10242E;color:#fff;border-color:#10242E}
+
+/* ---------- Prochaine séance ---------- */
+.next{margin:18px 0 6px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.next-top{padding:16px 18px 14px;border-left:6px solid var(--accent)}
+.next-label{font-size:.74rem;color:var(--muted);font-weight:500}
+.next-title{font-size:1.5rem;margin:2px 0 6px;line-height:1.15}
+.count{font-family:"Bricolage Grotesque","Inter",Helvetica,Arial,sans-serif;font-weight:800;font-size:2.4rem;line-height:1.05;
+  font-variant-numeric:tabular-nums;color:var(--accent);letter-spacing:-.03em}
+.count small{font-size:.9rem;font-weight:500;color:var(--muted);letter-spacing:0;display:block;margin-top:4px}
+.next-meta{font-size:.9rem;color:var(--muted);margin-top:10px}
+.next-meta b{color:var(--ink);font-weight:600}
+.next-kit{padding:12px 18px;background:#F6F9F9;border-top:1px solid var(--line);font-size:.84rem;color:var(--muted)}
+.next-kit b{color:var(--ink);font-weight:600}
+
+/* ---------- Semaine ---------- */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:26px 0 10px}
+.section-head h2{font-size:1.15rem}
+.week{display:grid;gap:10px}
+@media(min-width:920px){.week{grid-template-columns:repeat(7,1fr);align-items:start}}
+.day{background:var(--surface);border-radius:var(--radius);padding:10px 12px 12px;box-shadow:var(--shadow)}
+.day.today{outline:2px solid var(--ink)}
+.day h3{font-size:.9rem;display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:8px}
+.day h3 em{font-style:normal;font-size:.7rem;font-weight:600;color:#fff;background:var(--ink);
+  padding:2px 7px;border-radius:999px;font-family:"Inter",Helvetica,Arial,sans-serif}
+.slot{display:flex;align-items:stretch;gap:6px;border-left:4px solid var(--s);background:var(--bg);
+  border-radius:8px;margin-bottom:7px;overflow:hidden}
+.slot:last-child{margin-bottom:0}
+.slot .body{flex:1;min-width:0;text-align:left;border:0;background:none;padding:8px 4px 8px 10px;color:var(--ink)}
+.slot .h{font-size:.76rem;font-weight:600;color:var(--s);font-variant-numeric:tabular-nums}
+.slot .n{font-size:.92rem;font-weight:600;margin-top:1px}
+.slot .l{font-size:.76rem;color:var(--muted);margin-top:1px}
+.slot .prog{font-size:.8rem;color:var(--ink);margin-top:5px;line-height:1.4}
+.slot .rem{font-size:.76rem;color:var(--muted);margin-top:4px;font-style:italic}
+.rpe{display:inline-block;font-size:.68rem;font-weight:700;background:var(--s,#10242E);
+  color:#fff;padding:1px 7px;border-radius:999px;vertical-align:1px;white-space:nowrap}
+.next-meta .rpe{background:var(--accent)}
+.slot .pin{flex:none;width:42px;display:flex;align-items:center;justify-content:center;
+  text-decoration:none;color:var(--s);font-size:1.05rem;border-left:1px solid rgba(16,36,46,.08)}
+.slot.done{opacity:.55}
+.slot.done .n{text-decoration:line-through}
+.empty{font-size:.82rem;color:var(--muted);padding:6px 2px}
+
+/* ---------- Fiches sport ---------- */
+.sport-head{margin:20px 0 4px;padding:18px;border-radius:var(--radius);background:var(--surface);
+  border-left:6px solid var(--accent);box-shadow:var(--shadow)}
+.sport-head h1{font-size:1.7rem;color:var(--accent)}
+.sport-head p{margin:6px 0 0;color:var(--muted);font-size:.9rem}
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;margin-top:14px}
+.card h2{font-size:1.02rem;margin-bottom:10px}
+.card ul{margin:0;padding-left:1.1em}
+.card li{margin-bottom:6px;font-size:.92rem}
+.card li:last-child{margin-bottom:0}
+.slots-list{display:grid;gap:8px}
+.check{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.check:last-of-type{border-bottom:0}
+.check input{margin-top:3px;width:18px;height:18px;accent-color:var(--accent);flex:none}
+.check span.on{text-decoration:line-through;color:var(--muted)}
+.place{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.place:last-of-type{border-bottom:0}
+.place .info{flex:1;min-width:0}
+.place .nm{font-weight:600}
+.place .ad{font-size:.79rem;color:var(--muted)}
+
+/* ---------- Contacts ---------- */
+.contact{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.contact:last-of-type{border-bottom:0}
+.avatar{width:38px;height:38px;flex:none;border-radius:50%;background:var(--bg);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-weight:700;
+  font-family:"Bricolage Grotesque","Inter",Helvetica,Arial,sans-serif;font-size:.95rem}
+.contact .info{flex:1;min-width:0}
+.contact .nm{font-weight:600;font-size:.95rem}
+.contact .rl{font-size:.79rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.contact .acts{display:flex;gap:6px;flex:none}
+.icon{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;line-height:1;text-decoration:none;color:var(--ink)}
+.icon.wa{border-color:#25D366;color:#128C4A}
+.icon.del{color:#B23A2C}
+form.add{display:grid;gap:8px;margin-top:12px}
+@media(min-width:640px){form.add{grid-template-columns:1fr 1fr 1fr auto}}
+input,textarea{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;
+  background:#FAFCFC;color:var(--ink);width:100%;-webkit-appearance:none;appearance:none}
+textarea{min-height:88px;resize:vertical}
+.btn{border:0;background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-weight:600;font-size:.9rem;
+  text-decoration:none;display:inline-block;text-align:center}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line);font-weight:500}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.hint{font-size:.79rem;color:var(--muted);margin-top:8px}
+
+/* ---------- Volume ---------- */
+.bars{display:grid;gap:9px;margin-top:4px}
+.bar{display:grid;grid-template-columns:96px 1fr auto;align-items:center;gap:10px;font-size:.85rem}
+.track{height:9px;background:#E6EDED;border-radius:99px;overflow:hidden}
+.fill{height:100%;border-radius:99px}
+.bar em{font-style:normal;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.modal-back{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(16,36,46,.55);z-index:80;
+  display:flex;align-items:flex-end;justify-content:center}
+@media(min-width:640px){.modal-back{align-items:center;padding:20px}}
+.modal{background:var(--surface);width:100%;max-width:540px;max-height:90vh;display:flex;flex-direction:column;
+  border-radius:18px 18px 0 0;box-shadow:0 -8px 40px rgba(16,36,46,.35);overflow:hidden}
+@media(min-width:640px){.modal{border-radius:18px}}
+.mhead{padding:16px 18px 12px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start;
+  border-left:6px solid var(--accent)}
+.mhead h2{font-size:1.15rem}
+.mhead .sub{font-size:.82rem;color:var(--muted);margin-top:3px}
+.mhead .x{margin-left:auto;flex:none;width:34px;height:34px;border-radius:10px;border:1px solid var(--line);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1rem}
+.mbody{padding:14px 18px 18px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.mbody h3{font-size:.95rem;margin:16px 0 6px}
+.mbody h3:first-child{margin-top:0}
+.mfoot{border-top:1px solid var(--line);padding:12px 18px;display:flex;gap:8px;flex-wrap:wrap;background:#F6F9F9}
+.mfoot .btn{flex:1 1 auto}
+.mprog{font-size:.82rem;color:var(--muted);margin:0 0 8px}
+.mprog b{color:var(--accent)}
+.pitem{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.93rem}
+.pitem:last-child{border-bottom:0}
+.pitem input{width:20px;height:20px;accent-color:var(--accent);flex:none}
+.pitem span{flex:1}
+.pitem span.on{text-decoration:line-through;color:var(--muted)}
+.pitem .rm{flex:none;width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--surface);
+  color:#B23A2C;font-size:.85rem;display:flex;align-items:center;justify-content:center}
+.tagperso{font-size:.66rem;font-weight:600;color:var(--accent);border:1px solid var(--accent);
+  border-radius:999px;padding:0 6px;flex:none}
+.rowadd{display:flex;gap:8px;margin-top:10px}
+.rowadd input{flex:1}
+.jrn{border-left:3px solid var(--accent);background:#F6F9F9;border-radius:0 8px 8px 0;padding:8px 12px;margin-bottom:8px}
+.jrn .d{font-size:.72rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px;align-items:center}
+.jrn .t{font-size:.9rem;margin-top:3px;white-space:pre-wrap}
+.jrn button{border:0;background:none;color:#B23A2C;font-size:.75rem;padding:0}
+.toast{position:fixed;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);bottom:18px;
+  background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;font-size:.87rem;
+  box-shadow:var(--shadow);z-index:60;opacity:0;pointer-events:none;-webkit-transition:opacity .2s;transition:opacity .2s}
+.toast.show{opacity:1}
+@media(prefers-reduced-motion:reduce){*{-webkit-transition:none!important;transition:none!important;animation:none!important}}
+footer{color:var(--muted);font-size:.78rem;margin:28px 0 8px;text-align:center}
+@media print{nav.sports,.btnrow,form.add,.icon,.slot .pin{display:none}body{background:#fff}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div>
+      <div class="club">Hydros Triathlon Annecy</div>
+      <div class="season">Semaine type · saison 2026 / 2027</div>
+    </div>
+    <div class="seasontoggle" role="group" aria-label="Période de la saison">
+      <button type="button" data-season="belle" aria-pressed="false">Belle saison</button>
+      <button type="button" data-season="hiver" aria-pressed="true">Hiver</button>
+    </div>
+  </div>
+</header>
+
+<nav class="sports" aria-label="Sports">
+  <div class="tabs" id="tabs"></div>
+</nav>
+
+<main class="wrap" id="view">
+  <noscript><p style="margin-top:20px">Cette page a besoin de JavaScript pour afficher le planning.</p></noscript>
+</main>
+
+<footer>Planning club · horaires et contenus de séance confirmés chaque semaine sur le fil info.</footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+'use strict';
+
+/* =======================  Stockage (window.storage → localStorage → mémoire)  ======================= */
+var Store = (function () {
+  var mem = {};
+  var ws = null;
+  try { if (window.storage && typeof window.storage.get === 'function') ws = window.storage; } catch (e) {}
+  function get(k) {
+    if (ws) {
+      return ws.get(k).then(function (r) { return r ? r.value : null; }, function () { return null; });
+    }
+    var v = null;
+    try { v = window.localStorage.getItem(k); } catch (e) { v = mem[k] || null; }
+    return Promise.resolve(v);
+  }
+  function set(k, v) {
+    if (ws) { try { ws.set(k, v); return; } catch (e) {} }
+    try { window.localStorage.setItem(k, v); } catch (e) { mem[k] = v; }
+  }
+  return { get: get, set: set };
+})();
+
+/* =======================  Lieux  ======================= */
+var LIEUX = {
+  piscine: { nom: 'Piscine Jean Régis', adresse: '90 chemin des Fins Nord, 74000 Annecy', lat: 45.9209644, lng: 6.1216604 },
+  lac:     { nom: "Lac d'Annecy — plage d'Albigny", adresse: "6 avenue du Petit Port, 74940 Annecy-le-Vieux", lat: 45.9044558, lng: 6.1485595 },
+  stade:   { nom: "Stade d'Albigny", adresse: '6 rue du Pré Vernet, 74940 Annecy-le-Vieux', lat: 45.9077805, lng: 6.156581 },
+  imperial:{ nom: "Casiers — plage de l'Impérial", adresse: "Parking de l'Impérial, avenue d'Albigny, 74000 Annecy", lat: 45.904717, lng: 6.1428856 },
+  sallePPG:{ nom: 'Salle PPG — piscine-patinoire Jean Régis', adresse: '90 chemin des Fins Nord, 74000 Annecy', lat: 45.9209644, lng: 6.1216604 },
+  veloDepart:{ nom: "Face à la mairie d'Annecy", adresse: "Esplanade de l'Hôtel de Ville, 74000 Annecy", lat: 45.8992878, lng: 6.1293773 }
+};
+function lienMaps(l) {
+  return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(l.lat + ',' + l.lng);
+}
+
+/* =======================  Sports  ======================= */
+var SPORTS = {
+  natation: {
+    key: 'natation', nom: 'Natation', couleur: '#1B7FA6', tint: 'rgba(27,127,166,.10)',
+    resume: "4 séances matinales encadrées par Ludo. Bassin l'hiver, lac d'Annecy à la belle saison.",
+    consignes: {
+      commun: [
+        "Ouverture des portes à 6h15, départ dans l'eau à 6h30 : prévoir du temps pour l'échauffement à sec.",
+        "Pas de montre pendant la séance : le chrono mural fait foi.",
+        "Départs toutes les 5 secondes — 3 secondes si vous êtes 10 nageurs ou plus."
+      ],
+      hiver: [
+        "3 lignes d'eau disponibles à la piscine Jean Régis.",
+        "Nager à droite et laisser de la place au mur pour ceux qui terminent leur longueur.",
+        "Tous les virages et les coulées se font le plus à gauche possible de la ligne."
+      ],
+      belle: [
+        "Séances au lac d'Annecy (plage d'Albigny) : eau libre, jamais seul, on nage en groupe.",
+        "Bonnet de couleur vive et bouée de nage obligatoires pour être vu des bateaux.",
+        "Vérifier la température de l'eau : combinaison recommandée en début et fin de saison.",
+        "Repérer les points de sortie avant de partir et rester à l'intérieur de la zone balisée.",
+        "Point de repli à la piscine Jean Régis si les conditions ne le permettent pas — annoncé sur le fil info."
+      ]
+    },
+    materiel: {
+      hiver: ["Palmes courtes", "Tuba", "Pull buoy", "Plaques", "Élastiques", "Serviette + affaires de douche"],
+      belle: ["Combinaison néoprène", "Bonnet de couleur vive", "Bouée de nage", "Lunettes claires", "Serviette + vêtements chauds", "Palmes courtes (option)"]
+    },
+    contacts: [{ nom: 'Ludo', role: 'Coach natation', tel: '' }]
+  },
+  cap: {
+    key: 'cap', nom: 'Course à pied', couleur: '#C13B22', tint: 'rgba(193,59,34,.10)',
+    resume: "Mardi sur piste avec Baptiste, jeudi hors stade en autonomie.",
+    consignes: {
+      commun: [
+        "Mardi : RDV 19h au stade d'Albigny. Échauffement groupé hors stade de 19h00 à 19h30.",
+        "Sur la piste, le couloir intérieur est réservé aux actions d'intensité.",
+        "Gammes, accélérations et récupérations se font sur les couloirs extérieurs.",
+        "La pelouse est interdite d'accès.",
+        "Jeudi : RDV 19h aux casiers de la plage de l'Impérial, sans encadrement.",
+        "Le contenu du jeudi est proposé sur le fil info — vous pouvez aussi proposer le vôtre, il sera diffusé avec des adaptations selon les niveaux."
+      ]
+    },
+    materiel: { commun: ["Chaussures de piste ou running", "Ceinture cardio", "Frontale (séance du jeudi)", "Coupe-vent", "Gourde"] },
+    contacts: [{ nom: 'Baptiste', role: 'Coach course à pied — mardi, stade Albigny', tel: '' }]
+  },
+  ppg: {
+    key: 'ppg', nom: 'PPG', couleur: '#6A4E9C', tint: 'rgba(106,78,156,.10)',
+    resume: "Nouveauté de la saison : renforcement le mercredi soir, salle PPG Jean Régis.",
+    consignes: {
+      commun: [
+        "Mercredi 20h00 – 21h00, salle PPG de la piscine-patinoire Jean Régis.",
+        "Chaussures de salle uniquement.",
+        "Matériel personnel à apporter : élastique (résistance 2 à 10 kg max), tapis de sol, eau, serviette."
+      ]
+    },
+    materiel: { commun: ["Baskets d'intérieur", "Élastique 10 kg", "Tapis de sol", "Eau", "Serviette"] },
+    contacts: [{ nom: 'Ludo', role: 'Encadrement PPG', tel: '' }]
+  },
+  velo: {
+    key: 'velo', nom: 'Vélo', couleur: '#2E7D4F', tint: 'rgba(46,125,79,.10)',
+    resume: "Sortie du dimanche matin, départ groupé annoncé chaque semaine sur le fil info.",
+    consignes: {
+      commun: [
+        "Le contenu est proposé chaque semaine sur le fil info : distance ou durée approximative avec des axes de travail (vélocité, puissance…) par série au temps, au km, en watts, en FC ou en RPE.",
+        "Ensuite, à votre initiative : soit un parcours commun avec départ et retour groupés, soit un début commun puis deux à trois parcours par niveau.",
+        "Des capitaines de route sont recherchés — plus vous serez nombreux, moins vous aurez à le faire.",
+        "Toute annonce de sortie sur un outil du club engage la responsabilité du club : préciser casque obligatoire, lumière arrière, respect du code de la route et bienveillance envers les autres.",
+        "Lieu de départ confirmé chaque semaine sur le fil info — cette semaine face à la mairie d'Annecy, RDV 8h45 pour un départ à 9h.",
+        "En plein hiver, la sortie peut être remplacée par une séance home-trainer proposée sur le fil info."
+      ]
+    },
+    materiel: { commun: ["Casque (obligatoire)", "Lumière arrière", "Matos de réparation (chambre à air, démonte-pneu, pompe)", "Tenue Hydros", "Bidons + ravitaillement", "Coupe-vent"] },
+    contacts: [{ nom: 'Sébastien F.', role: 'Capitaine de route — sortie du dimanche', tel: '' },
+               { nom: 'Capitaine de route', role: 'Postes à pourvoir — proposez-vous sur le fil info', tel: '' }]
+  }
+};
+
+/* jour : 1 = lundi … 7 = dimanche */
+var SEMAINE_PLAN = 'Semaine du 7 au 13 septembre 2026';
+var SESSIONS = [
+  { id: 'nat-mar', sport: 'natation', jour: 2, debut: '06:00', reel: '06:30', reelLabel: 'eau', fin: '07:30', titre: 'Natation', lieu: { belle: 'lac', hiver: 'piscine' }, qui: 'Ludo',
+    contenu: "Aisance respiratoire + transfert dans différentes allures", rpe: '4 – 5' },
+  { id: 'nat-mer', sport: 'natation', jour: 3, debut: '06:00', reel: '06:30', reelLabel: 'eau', fin: '07:30', titre: 'Natation', lieu: { belle: 'lac', hiver: 'piscine' }, qui: 'Ludo',
+    contenu: "Aisance respiratoire + transfert dans différentes allures", rpe: '4 – 5' },
+  { id: 'nat-jeu', sport: 'natation', jour: 4, debut: '06:00', reel: '06:30', reelLabel: 'eau', fin: '08:00', titre: 'Natation (1h30)', lieu: { belle: 'lac', hiver: 'piscine' }, qui: 'Ludo',
+    contenu: "Aisance respiratoire + transfert dans différentes allures", rpe: '4 – 5' },
+  { id: 'nat-ven', sport: 'natation', jour: 5, debut: '06:00', reel: '06:30', reelLabel: 'eau', fin: '07:30', titre: 'Natation', lieu: { belle: 'lac', hiver: 'piscine' }, qui: 'Ludo',
+    contenu: "Aisance respiratoire + transfert dans différentes allures", rpe: '3 – 4' },
+  { id: 'cap-mar', sport: 'cap', jour: 2, debut: '19:00', fin: '20:15', titre: 'Course à pied — piste', lieu: 'stade', qui: 'Baptiste',
+    contenu: "5' mobilité / 20' blabla run — contenu détaillé à venir", rpe: '5 – 6',
+    remarque: "Sollicitez l'encadrement pour adapter séries et répétitions. 20h30 : bière de rentrée au Cabanon." },
+  { id: 'ppg-mer', sport: 'ppg', jour: 3, debut: '20:00', fin: '21:00', titre: 'PPG', lieu: 'sallePPG', qui: 'Ludo',
+    contenu: "15' échauffement puis travail par ateliers : 3 × (30\" ou 40\" d'effort / 30\" ou 20\" de repos), R 2'", rpe: '5 – 6',
+    remarque: "Séries et répétitions à adapter à votre forme du moment. RDV dans le hall de la piscine." },
+  { id: 'cap-jeu', sport: 'cap', jour: 4, debut: '19:00', fin: '20:00', titre: 'Course à pied — hors stade', lieu: 'imperial', qui: 'Sans encadrement',
+    contenu: "5' mobilité / 20' blabla run, puis 2 à 3 × [3 × (5 squats sautés / 50 m accélération progressive / retour trot)], puis 5' à 80–85 % FCmax, R 1'", rpe: '5 – 6',
+    remarque: "Squats : focus sur le placement du bassin en suspension." },
+  { id: 'velo-dim', sport: 'velo', jour: 7, debut: '08:45', reel: '09:00', reelLabel: 'départ', fin: '12:00', titre: 'Sortie vélo', lieu: 'veloDepart', qui: 'Sébastien F.',
+    contenu: "Tour du Semnoz en mode blabla vélo", rpe: '4 – 5',
+    remarque: "Focus cadence de pédalage entre 75 et 90 RPM, moyenne visée autour de 80 RPM sur la sortie." }
+];
+
+var JOURS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+var VIDE = { 1: "Repos. Bonne journée pour la mobilité ou une séance perso.", 6: "Rien au programme. Sortie longue libre ou récupération." };
+
+/* =======================  État  ======================= */
+var state = { season: 'hiver', contacts: {}, coches: {}, notes: {}, kit: {}, prep: {}, perso: {}, journal: {} };
+var route = 'semaine';
+var minuteur = null;
+
+function chargerEtat() {
+  return Store.get('hydros:v3').then(function (raw) {
+    if (raw) {
+      try {
+        var d = JSON.parse(raw);
+        for (var k in d) { if (Object.prototype.hasOwnProperty.call(d, k)) state[k] = d[k]; }
+      } catch (e) {}
+    }
+    if (!state.seeded) state.seeded = {};
+    if (!state.prep) state.prep = {};
+    if (!state.perso) state.perso = {};
+    if (!state.journal) state.journal = {};
+    for (var sp in SPORTS) {
+      if (!state.contacts[sp]) state.contacts[sp] = [];
+      (function (key) {
+        SPORTS[key].contacts.forEach(function (c, i) {
+          var id = key + i;
+          if (state.seeded[id]) return;
+          state.seeded[id] = 1;
+          var deja = state.contacts[key].some(function (x) { return x.id === id || x.nom === c.nom; });
+          if (!deja) state.contacts[key].push({ id: id, nom: c.nom, role: c.role, tel: c.tel });
+        });
+      })(sp);
+    }
+  });
+}
+var tSave = null;
+function sauver() {
+  if (tSave) clearTimeout(tSave);
+  tSave = setTimeout(function () { Store.set('hydros:v3', JSON.stringify(state)); }, 250);
+}
+function toast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg; el.className = 'toast show';
+  setTimeout(function () { el.className = 'toast'; }, 2200);
+}
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+  });
+}
+
+/* =======================  Dates  ======================= */
+function maintenant() { return new Date(); }
+function isoJour(d) { var j = d.getDay(); return j === 0 ? 7 : j; }
+function semaineISO(d) {
+  var t = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  t.setDate(t.getDate() + 4 - isoJour(t));
+  var deb = new Date(t.getFullYear(), 0, 1);
+  var n = Math.ceil((((t - deb) / 86400000) + 1) / 7);
+  return t.getFullYear() + '-S' + (n < 10 ? '0' + n : n);
+}
+function prochaine(s) {
+  var d = maintenant();
+  var p = s.debut.split(':');
+  var diff = (s.jour - isoJour(d) + 7) % 7;
+  var c = new Date(d.getFullYear(), d.getMonth(), d.getDate() + diff, +p[0], +p[1]);
+  if (c <= d) c.setDate(c.getDate() + 7);
+  return c;
+}
+function duree(s) {
+  var a = (s.reel || s.debut).split(':'), b = s.fin.split(':');
+  return (+b[0] * 60 + +b[1]) - (+a[0] * 60 + +a[1]);
+}
+function hm(t) { return t.replace(':', 'h').replace(/^0/, ''); }
+function fmtDuree(min) {
+  var h = Math.floor(min / 60), m = min % 60;
+  if (h && m) return h + 'h' + (m < 10 ? '0' + m : m);
+  if (h) return h + 'h';
+  return m + ' min';
+}
+function rebours(date) {
+  var s = Math.floor((date - maintenant()) / 1000);
+  if (s < 0) s = 0;
+  var j = Math.floor(s / 86400), h = Math.floor((s % 86400) / 3600), m = Math.floor((s % 3600) / 60);
+  if (j > 0) return j + ' j ' + h + ' h';
+  if (h > 0) return h + ' h ' + (m < 10 ? '0' + m : m);
+  return m + ' min';
+}
+function seances(sport) {
+  return SESSIONS.filter(function (s) {
+    return (!s.saison || s.saison === state.season) && (!sport || s.sport === sport);
+  });
+}
+function lieuDe(s) {
+  if (!s.lieu) return null;
+  var k = (typeof s.lieu === 'string') ? s.lieu : s.lieu[state.season];
+  return LIEUX[k] || null;
+}
+function textes(sp, champ) {
+  var src = sp[champ] || {};
+  var out = (src.commun || []).slice();
+  if (src[state.season]) out = out.concat(src[state.season]);
+  return out;
+}
+function estFaite(id) {
+  var w = state.coches[semaineISO(maintenant())];
+  return !!(w && w[id]);
+}
+function basculerFait(id) {
+  var k = semaineISO(maintenant());
+  if (!state.coches[k]) state.coches[k] = {};
+  state.coches[k][id] = !state.coches[k][id];
+  sauver(); rendre();
+}
+
+/* =======================  Rendu  ======================= */
+function tabs() {
+  var items = [{ key: 'semaine', nom: 'Semaine' }];
+  for (var k in SPORTS) items.push(SPORTS[k]);
+  document.getElementById('tabs').innerHTML = items.map(function (i) {
+    return '<button type="button" class="tab" data-route="' + i.key + '"' +
+      (route === i.key ? ' aria-current="page"' : '') + '>' +
+      (i.key !== 'semaine' ? '<span class="dot"></span>' : '') + esc(i.nom) + '</button>';
+  }).join('');
+}
+
+function pin(s, couleur) {
+  return '<button type="button" class="pin" style="--s:' + couleur + '" data-prep="' + s.id + '" ' +
+    'title="Se rendre à la séance" aria-label="Préparer et s\'y rendre : ' + esc(s.titre) + '">⌖</button>';
+}
+
+function blocProchaine(sport) {
+  var list = seances(sport).map(function (s) { return { s: s, d: prochaine(s) }; })
+    .sort(function (a, b) { return a.d - b.d; });
+  if (!list.length) return '';
+  var s = list[0].s, d = list[0].d, sp = SPORTS[s.sport], l = lieuDe(s);
+  var quand = d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  return '<section class="next" style="--accent:' + sp.couleur + '">' +
+    '<div class="next-top">' +
+      '<div class="next-label">Prochaine séance</div>' +
+      '<h2 class="next-title">' + esc(s.titre) + '</h2>' +
+      '<div class="count">dans ' + rebours(d) + '<small>' + quand + ' — arrivée ' + hm(s.debut) +
+        (s.reel ? ', ' + (s.reelLabel === 'eau' ? "dans l'eau à " : 'départ à ') + hm(s.reel) : '') + '</small></div>' +
+      '<div class="next-meta"><b>' + esc(l ? l.nom : 'Lieu libre') + '</b> · ' + esc(s.qui) + ' · ' + fmtDuree(duree(s)) + '</div>' +
+      (s.contenu ? '<div class="next-meta">' + esc(s.contenu) + (s.rpe ? ' <b class="rpe">RPE ' + esc(s.rpe) + '</b>' : '') + '</div>' : '') +
+      (s.remarque ? '<div class="next-meta">' + esc(s.remarque) + '</div>' : '') +
+      '<div class="btnrow"><button type="button" class="btn" style="background:' + sp.couleur +
+        '" data-prep="' + s.id + '">Se rendre — préparer mon sac</button></div>' +
+    '</div>' +
+    '<div class="next-kit"><b>À prendre :</b> ' + esc(textes(sp, 'materiel').join(' · ')) + '</div>' +
+  '</section>';
+}
+
+function vueSemaine() {
+  var auj = isoJour(maintenant());
+  var jours = JOURS.map(function (nom, i) {
+    var j = i + 1;
+    var ss = seances().filter(function (s) { return s.jour === j; })
+      .sort(function (a, b) { return a.debut < b.debut ? -1 : 1; });
+    var corps = ss.length ? ss.map(function (s) {
+      var sp = SPORTS[s.sport], l = lieuDe(s);
+      return '<div class="slot ' + (estFaite(s.id) ? 'done' : '') + '" style="--s:' + sp.couleur + ';--bg:' + sp.tint + '">' +
+        '<button type="button" class="body" data-goto="' + sp.key + '">' +
+          '<span class="h">' + hm(s.debut) + ' – ' + hm(s.fin) +
+            (s.reel ? ' · ' + s.reelLabel + ' ' + hm(s.reel) : '') + '</span>' +
+          '<span class="n" style="display:block">' + esc(s.titre) + '</span>' +
+          '<span class="l" style="display:block">' + esc(l ? l.nom : 'Lieu libre') + ' · ' + esc(s.qui) + '</span>' +
+        '</button>' + pin(s, sp.couleur) +
+      '</div>';
+    }).join('') : '<div class="empty">' + (VIDE[j] || 'Rien au programme.') + '</div>';
+    return '<div class="day ' + (j === auj ? 'today' : '') + '"><h3>' + nom +
+      (j === auj ? ' <em>Aujourd&rsquo;hui</em>' : '') + '</h3>' + corps + '</div>';
+  }).join('');
+
+  var total = seances().reduce(function (a, s) { return a + duree(s); }, 0);
+  var barres = [];
+  for (var k in SPORTS) {
+    var prevu = seances(k).reduce(function (a, s) { return a + duree(s); }, 0);
+    if (!prevu) continue;
+    var fait = seances(k).filter(function (s) { return estFaite(s.id); }).reduce(function (a, s) { return a + duree(s); }, 0);
+    barres.push('<div class="bar"><span>' + SPORTS[k].nom + '</span>' +
+      '<span class="track"><span class="fill" style="width:' + Math.round(fait / prevu * 100) + '%;background:' + SPORTS[k].couleur + '"></span></span>' +
+      '<em>' + fmtDuree(fait) + ' / ' + fmtDuree(prevu) + '</em></div>');
+  }
+
+  var pointage = seances().sort(function (a, b) { return a.jour - b.jour || (a.debut < b.debut ? -1 : 1); })
+    .map(function (s) {
+      return '<label class="check" style="--accent:' + SPORTS[s.sport].couleur + '">' +
+        '<input type="checkbox" data-fait="' + s.id + '"' + (estFaite(s.id) ? ' checked' : '') + '>' +
+        '<span class="' + (estFaite(s.id) ? 'on' : '') + '">' + JOURS[s.jour - 1] + ' ' +
+        hm(s.debut) + ' — ' + esc(s.titre) + ' (' + fmtDuree(duree(s)) + ')</span></label>';
+    }).join('');
+
+  return blocProchaine(null) +
+    '<div class="section-head"><h2>' + SEMAINE_PLAN + '</h2><span class="hint">' + seances().length +
+      ' séances · ' + fmtDuree(total) + ' · ' + (state.season === 'belle' ? 'belle saison' : 'période hivernale') + '</span></div>' +
+    '<div class="week">' + jours + '</div>' +
+    '<div class="card"><h2>Volume de la semaine</h2><div class="bars">' + barres.join('') + '</div>' +
+      '<h2 style="margin-top:16px">Pointer les séances faites</h2>' + pointage +
+      '<p class="hint">Le pointage repart à zéro chaque lundi.</p>' +
+      '<div class="btnrow"><button type="button" class="btn" data-ics="all">Ajouter la semaine au calendrier</button>' +
+      '<button type="button" class="btn ghost" data-print="1">Imprimer</button></div></div>' + carteInstall();
+}
+
+function estInstallee() {
+  try {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+           window.navigator.standalone === true;
+  } catch (e) { return false; }
+}
+function carteInstall() {
+  if (estInstallee()) return '';
+  var ios = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  var local = location.protocol === 'file:';
+  return '<div class="card"><h2>Mettre sur l\'écran d\'accueil</h2>' +
+    (local
+      ? '<p class="hint">La page est ouverte depuis un fichier local. Pour l\'épingler comme une appli, ouvre-la d\'abord via une adresse web (Google&nbsp;Drive, Dropbox, GitHub&nbsp;Pages ou tout autre hébergement), puis suis les étapes ci-dessous.</p>'
+      : '') +
+    '<ul>' +
+      (ios
+        ? '<li><b>iPhone / iPad</b> — dans Safari : bouton Partager, puis « Sur l\'écran d\'accueil ».</li>'
+        : '<li><b>Android</b> — dans Chrome ou Firefox : menu ⋮, puis « Ajouter à l\'écran d\'accueil » ou « Installer l\'application ».</li>') +
+      '<li><b>Ordinateur</b> — Chrome ou Edge : icône d\'installation dans la barre d\'adresse.</li>' +
+      '<li>Une fois épinglée, l\'appli s\'ouvre en plein écran avec ses propres notes et contacts.</li>' +
+    '</ul>' +
+    '<div class="btnrow"><button type="button" class="btn" data-install="1">Installer</button>' +
+    '<button type="button" class="btn ghost" data-open="1">Ouvrir dans le navigateur par défaut</button></div>' +
+    '<p class="hint" id="installhint"></p></div>';
+}
+
+function vueSport(key) {
+  var sp = SPORTS[key];
+  var ss = seances(key).sort(function (a, b) { return a.jour - b.jour; });
+  var contacts = state.contacts[key] || [];
+
+  var creneaux = ss.map(function (s) {
+    var l = lieuDe(s);
+    return '<div class="slot" style="--s:' + sp.couleur + ';--bg:' + sp.tint + '">' +
+      '<div class="body">' +
+        '<div class="h">' + JOURS[s.jour - 1] + ' · ' + hm(s.debut) + ' – ' + hm(s.fin) +
+          (s.reel ? ' · ' + s.reelLabel + ' ' + hm(s.reel) : '') + '</div>' +
+        '<div class="n">' + esc(s.titre) + '</div>' +
+        '<div class="l">' + esc(l ? l.nom : 'Lieu libre') + ' · ' + esc(s.qui) + '</div>' +
+        (s.contenu ? '<div class="prog">' + esc(s.contenu) +
+          (s.rpe ? ' <b class="rpe">RPE ' + esc(s.rpe) + '</b>' : '') + '</div>' : '') +
+        (s.remarque ? '<div class="rem">' + esc(s.remarque) + '</div>' : '') +
+      '</div>' + pin(s, sp.couleur) + '</div>';
+  }).join('');
+
+  var lieux = {}, listeLieux = '';
+  ss.forEach(function (s) { var l = lieuDe(s); if (l) lieux[l.nom] = l; });
+  for (var n in lieux) {
+    listeLieux += '<div class="place"><div class="info"><div class="nm">' + esc(lieux[n].nom) + '</div>' +
+      '<div class="ad">' + esc(lieux[n].adresse) + (lieux[n].incertain ? ' — à confirmer sur le fil info' : '') + '</div></div>' +
+      '<a class="icon" href="' + lienMaps(lieux[n]) + '" target="_blank" rel="noopener" title="Ouvrir dans Maps">⌖</a></div>';
+  }
+
+  var contactsHtml = contacts.length ? contacts.map(function (c) {
+    return '<div class="contact">' +
+      '<div class="avatar" style="--bg:' + sp.tint + ';--accent:' + sp.couleur + '">' + esc(c.nom.charAt(0).toUpperCase()) + '</div>' +
+      '<div class="info"><div class="nm">' + esc(c.nom) + '</div><div class="rl">' + esc(c.role || '') +
+      (c.tel ? ' · ' + esc(c.tel) : '') + '</div></div><div class="acts">' +
+      (c.tel ? '<a class="icon wa" href="https://wa.me/' + c.tel.replace(/[^0-9]/g, '') + '" target="_blank" rel="noopener" title="WhatsApp">✆</a>' : '') +
+      '<button type="button" class="icon del" data-del="' + key + ':' + c.id + '" title="Supprimer ' + esc(c.nom) + '">✕</button>' +
+      '</div></div>';
+  }).join('') : '<p class="hint">Aucun contact pour l\'instant. Ajoutez les personnes que vous avez déjà sur WhatsApp.</p>';
+
+  return '<div class="sport-head" style="--accent:' + sp.couleur + '">' +
+      '<h1>' + sp.nom + '</h1><p>' + esc(sp.resume) + '</p>' +
+      '<p><b>' + ss.length + ' séance' + (ss.length > 1 ? 's' : '') + '</b> · ' +
+      fmtDuree(ss.reduce(function (a, s) { return a + duree(s); }, 0)) + ' par semaine</p></div>' +
+    blocProchaine(key) +
+    '<div class="card"><h2>Créneaux</h2><p class="hint" style="margin:-4px 0 10px">Contenus annoncés pour la ' +
+      SEMAINE_PLAN.charAt(0).toLowerCase() + SEMAINE_PLAN.slice(1) + '.</p><div class="slots-list">' + creneaux + '</div>' +
+      '<div class="btnrow"><button type="button" class="btn" style="background:' + sp.couleur + '" data-ics="' + key + '">Ajouter ces créneaux au calendrier</button></div></div>' +
+    (listeLieux ? '<div class="card"><h2>Où ça se passe</h2>' + listeLieux + '</div>' : '') +
+    '<div class="card"><h2>Consignes</h2><ul>' + textes(sp, 'consignes').map(function (c) { return '<li>' + esc(c) + '</li>'; }).join('') + '</ul></div>' +
+    journalCarte(key, sp) +
+    '<div class="card" style="--accent:' + sp.couleur + '"><h2>Contacts</h2>' + contactsHtml +
+      '<form class="add" data-addto="' + key + '">' +
+        '<input name="nom" placeholder="Prénom" required autocomplete="off">' +
+        '<input name="role" placeholder="Rôle (coach, covoiturage…)" autocomplete="off">' +
+        '<input name="tel" placeholder="Téléphone (+336…)" inputmode="tel" autocomplete="off">' +
+        '<button type="submit" class="btn" style="background:' + sp.couleur + '">Ajouter</button>' +
+      '</form><p class="hint">Un numéro au format international (+33…) active le bouton WhatsApp.</p></div>' +
+    '<div class="card"><h2>Mes notes</h2>' +
+      '<textarea data-note="' + key + '" placeholder="Sensations, temps de passage, questions à poser au coach…">' +
+      esc(state.notes[key] || '') + '</textarea>' +
+      '<p class="hint">Enregistré automatiquement sur cet appareil.</p></div>';
+}
+
+function rendre() {
+  try {
+    tabs();
+    document.documentElement.style.setProperty('--accent', route === 'semaine' ? '#1B7FA6' : SPORTS[route].couleur);
+    document.getElementById('view').innerHTML = (route === 'semaine') ? vueSemaine() : vueSport(route);
+    brancher();
+  } catch (e) {
+    document.getElementById('view').innerHTML = '<p style="margin-top:20px">Affichage impossible : ' + esc(e.message) + '</p>';
+  }
+}
+
+/* =======================  Interactions  ======================= */
+function each(sel, fn) { Array.prototype.forEach.call(document.querySelectorAll(sel), fn); }
+
+function brancher() {
+  each('.tab', function (b) {
+    b.onclick = function () { route = b.getAttribute('data-route'); window.scrollTo(0, 0); rendre(); };
+  });
+  each('[data-goto]', function (b) {
+    b.onclick = function () { route = b.getAttribute('data-goto'); window.scrollTo(0, 0); rendre(); };
+  });
+  each('[data-fait]', function (c) { c.onchange = function () { basculerFait(c.getAttribute('data-fait')); }; });
+  each('[data-del]', function (b) {
+    b.onclick = function () {
+      var p = b.getAttribute('data-del').split(':');
+      state.contacts[p[0]] = state.contacts[p[0]].filter(function (c) { return c.id !== p[1]; });
+      sauver(); rendre(); toast('Contact supprimé');
+    };
+  });
+  each('form.add', function (f) {
+    f.onsubmit = function (e) {
+      e.preventDefault();
+      var k = f.getAttribute('data-addto');
+      var nom = f.elements.nom.value.replace(/^\s+|\s+$/g, '');
+      if (!nom) return false;
+      state.contacts[k].push({
+        id: 'c' + Date.now(),
+        nom: nom,
+        role: f.elements.role.value.replace(/^\s+|\s+$/g, ''),
+        tel: f.elements.tel.value.replace(/^\s+|\s+$/g, '')
+      });
+      sauver(); rendre(); toast(nom + ' ajouté');
+      return false;
+    };
+  });
+  each('[data-note]', function (t) {
+    t.oninput = function () { state.notes[t.getAttribute('data-note')] = t.value; sauver(); };
+  });
+  each('[data-ics]', function (b) {
+    b.onclick = function () { var v = b.getAttribute('data-ics'); exporterICS(v === 'all' ? null : v); };
+  });
+  each('[data-print]', function (b) { b.onclick = function () { window.print(); }; });
+  each('[data-prep]', function (b) {
+    b.onclick = function (e) { e.stopPropagation(); ouvrirModal(b.getAttribute('data-prep')); };
+  });
+  each('[data-install]', function (b) {
+    b.onclick = function () {
+      if (promptInstall) {
+        promptInstall.prompt();
+        promptInstall.userChoice.then(function () { promptInstall = null; });
+      } else {
+        document.getElementById('installhint').textContent =
+          "Ton navigateur ne propose pas l'installation automatique : utilise le menu de partage ou le menu ⋮, puis « Sur l'écran d'accueil ».";
+      }
+    };
+  });
+  each('[data-open]', function (b) {
+    b.onclick = function () {
+      if (location.protocol === 'file:') {
+        document.getElementById('installhint').textContent =
+          'Fichier local : ouvre-le avec « Ouvrir avec » depuis ton gestionnaire de fichiers, ou héberge-le pour avoir une vraie adresse web.';
+      } else {
+        window.open(location.href, '_blank', 'noopener');
+      }
+    };
+  });
+}
+
+each('.seasontoggle button', function (b) {
+  b.onclick = function () {
+    state.season = b.getAttribute('data-season');
+    sauver();
+    each('.seasontoggle button', function (x) {
+      x.setAttribute('aria-pressed', x.getAttribute('data-season') === state.season ? 'true' : 'false');
+    });
+    rendre();
+    toast(state.season === 'belle' ? "Belle saison : natation au lac d'Annecy" : 'Période hivernale : natation en bassin');
+  };
+});
+
+var swErreur = null;
+function enregistrerSW(apres) {
+  if (!('serviceWorker' in navigator)) { swErreur = 'non supporté par ce navigateur'; if (apres) apres(); return; }
+  if (location.protocol !== 'https:') { swErreur = 'impossible hors HTTPS'; if (apres) apres(); return; }
+  navigator.serviceWorker.register('sw.js').then(
+    function () { swErreur = null; if (apres) apres(); },
+    function (e) { swErreur = (e && e.message) ? e.message : String(e); if (apres) apres(); }
+  );
+}
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () { enregistrerSW(); });
+}
+
+var promptInstall = null;
+window.addEventListener('beforeinstallprompt', function (e) {
+  e.preventDefault(); promptInstall = e;
+});
+window.addEventListener('appinstalled', function () { promptInstall = null; toast('Ajouté à l\'écran d\'accueil'); });
+
+
+/* =======================  Préparation de séance  ======================= */
+function sessionParId(id) {
+  for (var i = 0; i < SESSIONS.length; i++) if (SESSIONS[i].id === id) return SESSIONS[i];
+  return null;
+}
+function itemsBase(s) {
+  var base = textes(SPORTS[s.sport], 'materiel').slice();
+  var aDeQuoiBoire = base.some(function (x) { return /gourde|bidon|\beau\b/i.test(x); });
+  if (!aDeQuoiBoire) base.push("Gourde d'eau");
+  return base;
+}
+function prepKey(s) { return semaineISO(maintenant()) + '|' + s.id; }
+function prepEtat(s) {
+  var k = prepKey(s);
+  if (!state.prep[k]) state.prep[k] = {};
+  return state.prep[k];
+}
+function journalDe(id) { return state.journal[id] || []; }
+
+var modalId = null;
+function ouvrirModal(id) {
+  modalId = id;
+  var h = document.createElement('div');
+  h.className = 'modal-back';
+  h.id = 'modalback';
+  document.body.appendChild(h);
+  document.body.style.overflow = 'hidden';
+  h.onclick = function (e) { if (e.target === h) fermerModal(); };
+  document.addEventListener('keydown', echap);
+  rendreModal();
+}
+function echap(e) { if (e.key === 'Escape' || e.keyCode === 27) fermerModal(); }
+function fermerModal() {
+  var h = document.getElementById('modalback');
+  if (h && h.parentNode) h.parentNode.removeChild(h);
+  document.removeEventListener('keydown', echap);
+  document.body.style.overflow = '';
+  modalId = null;
+  rendre();
+}
+function rendreModal() {
+  var h = document.getElementById('modalback');
+  if (!h) return;
+  var s = sessionParId(modalId), sp = SPORTS[s.sport], l = lieuDe(s), coche = prepEtat(s);
+  var base = itemsBase(s), perso = state.perso[s.id] || [];
+  var tous = base.concat(perso);
+  var prets = tous.filter(function (x) { return coche[x]; }).length;
+  var d = prochaine(s);
+
+  function ligne(label, estPerso) {
+    return '<label class="pitem">' +
+      '<input type="checkbox" data-mcheck="' + esc(label) + '"' + (coche[label] ? ' checked' : '') + '>' +
+      '<span class="' + (coche[label] ? 'on' : '') + '">' + esc(label) + '</span>' +
+      (estPerso ? '<span class="tagperso">perso</span>' +
+        '<button type="button" class="rm" data-mrm="' + esc(label) + '" title="Retirer">✕</button>' : '') +
+      '</label>';
+  }
+
+  var jrn = journalDe(s.id).map(function (c, i) {
+    return '<div class="jrn"><div class="d"><span>' + esc(c.d) + '</span>' +
+      '<button type="button" data-mdel="' + i + '">supprimer</button></div>' +
+      '<div class="t">' + esc(c.t) + '</div></div>';
+  }).join('');
+
+  h.innerHTML = '<div class="modal" role="dialog" aria-modal="true" aria-label="Préparer ' + esc(s.titre) + '" style="--accent:' + sp.couleur + '">' +
+    '<div class="mhead"><div><h2>' + esc(s.titre) + '</h2>' +
+      '<div class="sub">' + JOURS[s.jour - 1] + ' ' + hm(s.debut) +
+      (s.reel ? ' · ' + s.reelLabel + ' ' + hm(s.reel) : '') + ' · ' + esc(l ? l.nom : 'Lieu libre') + '</div></div>' +
+      '<button type="button" class="x" data-mclose="1" aria-label="Fermer">✕</button></div>' +
+    '<div class="mbody">' +
+      '<h3>Mon sac</h3>' +
+      '<p class="mprog"><b>' + prets + ' / ' + tous.length + '</b> coché' + (prets > 1 ? 's' : '') + '</p>' +
+      base.map(function (x) { return ligne(x, false); }).join('') +
+      perso.map(function (x) { return ligne(x, true); }).join('') +
+      '<div class="rowadd"><input id="mnew" placeholder="Ajouter un élément (barres, lunettes…)" autocomplete="off">' +
+        '<button type="button" class="btn" style="background:' + sp.couleur + '" data-madd="1">Ajouter</button></div>' +
+      '<p class="hint">Les éléments perso restent d\'une semaine à l\'autre, les cases se remettent à zéro chaque lundi.</p>' +
+      '<h3>Commentaire de séance</h3>' +
+      '<textarea id="mcom" placeholder="Sensations, allures tenues, ce qu\'il faudra ajuster…"></textarea>' +
+      '<div class="btnrow"><button type="button" class="btn ghost" data-msave="1">Enregistrer le commentaire</button></div>' +
+      (jrn ? '<h3>Historique</h3>' + jrn : '') +
+    '</div>' +
+    '<div class="mfoot">' +
+      (l ? '<a class="btn" style="background:' + sp.couleur + '" href="' + lienMaps(l) + '" target="_blank" rel="noopener">Itinéraire</a>' : '') +
+      '<button type="button" class="btn ghost" data-mfait="1">' + (estFaite(s.id) ? '✓ Séance faite' : 'Marquer comme faite') + '</button>' +
+      '<button type="button" class="btn ghost" data-mreset="1">Vider les cases</button>' +
+    '</div></div>';
+
+  each('[data-mclose]', function (b) { b.onclick = fermerModal; });
+  each('[data-mcheck]', function (c) {
+    c.onchange = function () {
+      var k = c.getAttribute('data-mcheck');
+      coche[k] = c.checked; sauver(); rendreModal();
+    };
+  });
+  each('[data-mrm]', function (b) {
+    b.onclick = function () {
+      var k = b.getAttribute('data-mrm');
+      state.perso[s.id] = (state.perso[s.id] || []).filter(function (x) { return x !== k; });
+      delete coche[k]; sauver(); rendreModal();
+    };
+  });
+  each('[data-madd]', function (b) {
+    b.onclick = function () {
+      var i = document.getElementById('mnew'), v = i.value.replace(/^\s+|\s+$/g, '');
+      if (!v) return;
+      if (!state.perso[s.id]) state.perso[s.id] = [];
+      if (state.perso[s.id].indexOf(v) === -1 && base.indexOf(v) === -1) state.perso[s.id].push(v);
+      i.value = ''; sauver(); rendreModal();
+    };
+  });
+  var champ = document.getElementById('mnew');
+  if (champ) champ.onkeydown = function (e) {
+    if (e.key === 'Enter' || e.keyCode === 13) { e.preventDefault(); document.querySelector('[data-madd]').click(); }
+  };
+  each('[data-msave]', function (b) {
+    b.onclick = function () {
+      var t = document.getElementById('mcom'), v = t.value.replace(/^\s+|\s+$/g, '');
+      if (!v) return;
+      if (!state.journal[s.id]) state.journal[s.id] = [];
+      state.journal[s.id].unshift({ d: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }), t: v });
+      t.value = ''; sauver(); rendreModal(); toast('Commentaire enregistré');
+    };
+  });
+  each('[data-mdel]', function (b) {
+    b.onclick = function () {
+      state.journal[s.id].splice(+b.getAttribute('data-mdel'), 1);
+      sauver(); rendreModal();
+    };
+  });
+  each('[data-mfait]', function (b) {
+    b.onclick = function () {
+      var k = semaineISO(maintenant());
+      if (!state.coches[k]) state.coches[k] = {};
+      state.coches[k][s.id] = !state.coches[k][s.id];
+      sauver(); rendreModal();
+      toast(estFaite(s.id) ? 'Séance validée' : 'Séance décochée');
+    };
+  });
+  each('[data-mreset]', function (b) {
+    b.onclick = function () { state.prep[prepKey(s)] = {}; sauver(); rendreModal(); };
+  });
+}
+
+function journalCarte(key, sp) {
+  var ss = seances(key), html = '', total = 0;
+  ss.forEach(function (s) {
+    var j = journalDe(s.id);
+    total += j.length;
+    j.slice(0, 3).forEach(function (c) {
+      html += '<div class="jrn" style="--accent:' + sp.couleur + '"><div class="d"><span>' +
+        esc(c.d) + ' · ' + esc(s.titre) + '</span></div><div class="t">' + esc(c.t) + '</div></div>';
+    });
+  });
+  return '<div class="card" style="--accent:' + sp.couleur + '"><h2>Journal des séances</h2>' +
+    (total ? html : '<p class="hint">Aucun commentaire pour l\'instant. Ouvre une séance avec le bouton ⌖ pour préparer ton sac et noter tes sensations.</p>') +
+    '</div>';
+}
+
+/* =======================  Export calendrier  ======================= */
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function stamp(d) {
+  return d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + 'T' + pad(d.getHours()) + pad(d.getMinutes()) + '00';
+}
+function exporterICS(sport) {
+  var ss = seances(sport), lignes = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Hydros Annecy//Semaine type//FR', 'CALSCALE:GREGORIAN'];
+  ss.forEach(function (s) {
+    var d = prochaine(s), f = new Date(d.getTime()), p = s.fin.split(':');
+    f.setHours(+p[0], +p[1], 0, 0);
+    var sp = SPORTS[s.sport], l = lieuDe(s);
+    var desc = s.qui + '. À prendre : ' + textes(sp, 'materiel').join(', ');
+    lignes.push('BEGIN:VEVENT', 'UID:' + s.id + '-' + state.season + '@hydros',
+      'DTSTAMP:' + stamp(new Date()), 'DTSTART:' + stamp(d), 'DTEND:' + stamp(f),
+      'RRULE:FREQ=WEEKLY', 'SUMMARY:' + s.titre + ' — Hydros',
+      'LOCATION:' + (l ? (l.nom + ', ' + l.adresse).replace(/,/g, '\\,') : 'Lieu libre'),
+      'DESCRIPTION:' + desc.replace(/[,;]/g, function (m) { return '\\' + m; }),
+      'END:VEVENT');
+  });
+  lignes.push('END:VCALENDAR');
+  var nom = 'hydros-' + (sport || 'semaine') + '-' + state.season + '.ics';
+  var contenu = lignes.join('\r\n');
+  try {
+    var blob = new Blob([contenu], { type: 'text/calendar;charset=utf-8' });
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      window.navigator.msSaveOrOpenBlob(blob, nom);
+    } else {
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = nom; a.style.display = 'none';
+      document.body.appendChild(a); a.click();
+      setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 500);
+    }
+    toast('Fichier .ics téléchargé');
+  } catch (e) {
+    window.open('data:text/calendar;charset=utf-8,' + encodeURIComponent(contenu), '_blank');
+  }
+}
+
+/* =======================  Démarrage  ======================= */
+chargerEtat().then(function () {
+  each('.seasontoggle button', function (x) {
+    x.setAttribute('aria-pressed', x.getAttribute('data-season') === state.season ? 'true' : 'false');
+  });
+  rendre();
+  minuteur = setInterval(function () { if (document.querySelector('.count')) rendre(); }, 60000);
+})['catch'](function (e) {
+  document.getElementById('view').innerHTML = '<p style="margin-top:20px">Chargement impossible : ' + esc(e.message) + '</p>';
+});
+
+})();
+</script>
+</body>
+</html>
